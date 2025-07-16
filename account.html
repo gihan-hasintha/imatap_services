@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Account</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="profile-bg"></div>
     <div class="main-card">
-        <div class="avatar-wrapper">
-            <img class="avatar" id="avatarImg" src="" alt="Avatar">
+        <div class="photo-section-of-profile">
+            <div class="photo-section-of-profile-cover" id="coverPhotoImg">
+                <div class="avatar-wrapper">
+                    <img class="avatar" id="avatarImg" src="" alt="Avatar">
+                </div>
+            </div>
         </div>
-        <div class="profile-name" id="profileName">Loading...</div>
-        <div class="profile-intro" id="profileIntro"></div>
+        <div class="space-for-profile-details"></div>
+        <div class="profile-details">
+            <div class="profile-name" id="profileName">Loading...</div>
+            <div class="profile-intro" id="profileIntro"></div>
+        </div>
+
         <div class="action-row">
             <button class="action-btn" id="saveBtn" title="Save Contact">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14m7-7H5"/></svg>
@@ -79,6 +87,7 @@
         async function loadAccount() {
             const id = getIdFromUrl();
             const avatarImg = document.getElementById('avatarImg');
+            const coverPhotoImg = document.getElementById('coverPhotoImg');
             const profileName = document.getElementById('profileName');
             const profileIntro = document.getElementById('profileIntro');
             const infoCard = document.getElementById('infoCard');
@@ -94,6 +103,7 @@
             }
             const data = docSnap.data();
             avatarImg.src = data.avatarUrl || '';
+            coverPhotoImg.style.backgroundImage = data.coverPhoto ? `url('${data.coverPhoto}')` : '';
             profileName.textContent = data.fullName || '';
             profileIntro.textContent = data.intro || `Hi! My name is ${data.fullName || ''}. It's nice to meet you.`;
             infoCard.innerHTML = renderInfoCard(data);
