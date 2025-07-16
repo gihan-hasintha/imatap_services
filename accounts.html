@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Client Accounts</title>
+    <style>
+        .card-list { display: flex; flex-wrap: wrap; gap: 20px; }
+        .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; width: 220px; text-align: center; box-shadow: 2px 2px 8px #eee; cursor: pointer; transition: box-shadow 0.2s; }
+        .card:hover { box-shadow: 2px 2px 16px #bbb; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>All Client Accounts</h2>
+    <div class="card-list" id="cardList"></div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+      import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
+        authDomain: "imatap.firebaseapp.com",
+        projectId: "imatap",
+        storageBucket: "imatap.firebasestorage.app",
+        messagingSenderId: "385083217755",
+        appId: "1:385083217755:web:83334c40989a9032c8ac7e",
+        measurementId: "G-43CKB8XJBF"
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const cardList = document.getElementById('cardList');
+      async function loadAccounts() {
+        const querySnapshot = await getDocs(collection(db, 'clients'));
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.onclick = () => window.location.href = `account.html?id=${doc.id}`;
+          card.innerHTML = `
+            <img class="avatar" src="${data.avatarUrl}" alt="Avatar">
+            <h3>${data.fullName}</h3>
+            <p>${data.company || ''}</p>
+          `;
+          cardList.appendChild(card);
+        });
+      }
+      loadAccounts();
+    </script>
+</body>
+</html> 

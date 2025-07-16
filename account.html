@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Account</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="profile-bg"></div>
+    <div class="main-card">
+        <div class="avatar-wrapper">
+            <img class="avatar" id="avatarImg" src="" alt="Avatar">
+        </div>
+        <div class="profile-name" id="profileName">Loading...</div>
+        <div class="profile-intro" id="profileIntro"></div>
+        <div class="action-row">
+            <button class="action-btn" id="saveBtn" title="Save Contact">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14m7-7H5"/></svg>
+                Save
+            </button>
+            <button class="action-btn" id="connectBtn" title="Connect">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
+                Connect
+            </button>
+            <button class="action-btn" id="shareBtn" title="Share">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v.01M12 4v.01M20 12v.01M12 20v.01"/></svg>
+                Share
+            </button>
+        </div>
+        <div class="info-card" id="infoCard">
+            <!-- Info fields will be injected here -->
+        </div>
+        <div class="tab-bar">
+            <button class="tab-btn active" id="aboutTab">About</button>
+            <button class="tab-btn" id="galleryTab">Gallery</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
+            authDomain: "imatap.firebaseapp.com",
+            projectId: "imatap",
+            storageBucket: "imatap.firebasestorage.app",
+            messagingSenderId: "385083217755",
+            appId: "1:385083217755:web:83334c40989a9032c8ac7e",
+            measurementId: "G-43CKB8XJBF"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        function getIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+        function renderInfoCard(data) {
+            return `
+                <div class="info-field"><span class="info-label">Email:</span> <span class="info-value">${data.email || ''}</span></div>
+                <div class="info-field"><span class="info-label">Job Role:</span> <span class="info-value">${data.jobRole || ''}</span></div>
+                <div class="info-field"><span class="info-label">Company:</span> <span class="info-value">${data.company || ''}</span></div>
+                <div class="info-field"><span class="info-label">Phone:</span> <span class="info-value">${data.phone || ''}</span></div>
+                <div class="info-field"><span class="info-label">Whatsapp:</span> <span class="info-value">${data.whatsapp || ''}</span></div>
+                <div class="info-field"><span class="info-label">Mobile:</span> <span class="info-value">${data.mobile || ''}</span></div>
+                <div class="info-field"><span class="info-label">Address:</span> <span class="info-value">${data.address || ''}</span></div>
+                ${data.website ? `<div class="info-field"><span class="info-label">Website:</span> <a class="info-value" href="${data.website}" target="_blank">${data.website}</a></div>` : ''}
+                <div class="info-field socials">
+                    ${data.social?.facebook ? `<a href="${data.social.facebook}" target="_blank" title="Facebook">&#xf09a;</a>` : ''}
+                    ${data.social?.tiktok ? `<a href="${data.social.tiktok}" target="_blank" title="TikTok">&#xe07b;</a>` : ''}
+                    ${data.social?.linkedin ? `<a href="${data.social.linkedin}" target="_blank" title="LinkedIn">&#xf0e1;</a>` : ''}
+                    ${data.social?.twitter ? `<a href="${data.social.twitter}" target="_blank" title="X (Twitter)">&#xf099;</a>` : ''}
+                    ${data.social?.youtube ? `<a href="${data.social.youtube}" target="_blank" title="YouTube">&#xf167;</a>` : ''}
+                    ${data.social?.behance ? `<a href="${data.social.behance}" target="_blank" title="Behance">&#xf1b4;</a>` : ''}
+                    ${data.social?.github ? `<a href="${data.social.github}" target="_blank" title="GitHub">&#xf09b;</a>` : ''}
+                </div>
+            `;
+        }
+        async function loadAccount() {
+            const id = getIdFromUrl();
+            const avatarImg = document.getElementById('avatarImg');
+            const profileName = document.getElementById('profileName');
+            const profileIntro = document.getElementById('profileIntro');
+            const infoCard = document.getElementById('infoCard');
+            if (!id) {
+                profileName.textContent = 'Account ID not specified.';
+                return;
+            }
+            const docRef = doc(db, 'clients', id);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) {
+                profileName.textContent = 'Account not found.';
+                return;
+            }
+            const data = docSnap.data();
+            avatarImg.src = data.avatarUrl || '';
+            profileName.textContent = data.fullName || '';
+            profileIntro.textContent = data.intro || `Hi! My name is ${data.fullName || ''}. It's nice to meet you.`;
+            infoCard.innerHTML = renderInfoCard(data);
+        }
+        loadAccount();
+        // Tab switching (About/Gallery)
+        document.getElementById('aboutTab').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('galleryTab').classList.remove('active');
+            document.getElementById('infoCard').style.display = '';
+        });
+        document.getElementById('galleryTab').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('aboutTab').classList.remove('active');
+            document.getElementById('infoCard').style.display = 'none';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Create Client Account</h2>
+    <form id="clientForm">
+        <label>Avatar Image: <input type="file" id="avatar" accept="image/*" required></label><br>
+        <label>Full Name: <input type="text" id="fullName" required></label><br>
+        <label>Email: <input type="email" id="email" required></label><br>
+        <label>Job Role: <input type="text" id="jobRole" required></label><br>
+        <label>Company: <input type="text" id="company" required></label><br>
+        <label>Phone: <input type="text" id="phone" required></label><br>
+        <label>Whatsapp Number: <input type="text" id="whatsapp" required></label><br>
+        <label>Mobile: <input type="text" id="mobile" required></label><br>
+        <label>Address: <input type="text" id="address" required></label><br>
+        <label>Website (optional): <input type="url" id="website"></label><br>
+        <fieldset>
+            <legend>Social Media Links (optional)</legend>
+            <label>Facebook: <input type="url" id="facebook"></label><br>
+            <label>TikTok: <input type="url" id="tiktok"></label><br>
+            <label>LinkedIn: <input type="url" id="linkedin"></label><br>
+            <label>X (Twitter): <input type="url" id="twitter"></label><br>
+            <label>YouTube: <input type="url" id="youtube"></label><br>
+            <label>Behance: <input type="url" id="behance"></label><br>
+            <label>GitHub: <input type="url" id="github"></label><br>
+        </fieldset>
+        <button type="submit">Create Account</button>
+    </form>
+    <div id="status"></div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
+        authDomain: "imatap.firebaseapp.com",
+        projectId: "imatap",
+        storageBucket: "imatap.firebasestorage.app",
+        messagingSenderId: "385083217755",
+        appId: "1:385083217755:web:83334c40989a9032c8ac7e",
+        measurementId: "G-43CKB8XJBF"
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Cloudinary config (replace with your own)
+      const cloudName = 'dffhwv0m1'; // TODO: Replace
+      const unsignedUploadPreset = 'avatars'; // TODO: Replace
+
+      document.getElementById('clientForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const statusDiv = document.getElementById('status');
+        statusDiv.textContent = 'Uploading avatar...';
+        // Upload avatar to Cloudinary
+        const avatarFile = document.getElementById('avatar').files[0];
+        const formData = new FormData();
+        formData.append('file', avatarFile);
+        formData.append('upload_preset', unsignedUploadPreset);
+        try {
+          const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData
+          });
+          const cloudinaryData = await cloudinaryRes.json();
+          if (!cloudinaryData.secure_url) throw new Error('Cloudinary upload failed');
+          statusDiv.textContent = 'Saving data to Firestore...';
+          // Collect form data
+          const data = {
+            avatarUrl: cloudinaryData.secure_url,
+            fullName: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            jobRole: document.getElementById('jobRole').value,
+            company: document.getElementById('company').value,
+            phone: document.getElementById('phone').value,
+            whatsapp: document.getElementById('whatsapp').value,
+            mobile: document.getElementById('mobile').value,
+            address: document.getElementById('address').value,
+            website: document.getElementById('website').value,
+            social: {
+              facebook: document.getElementById('facebook').value,
+              tiktok: document.getElementById('tiktok').value,
+              linkedin: document.getElementById('linkedin').value,
+              twitter: document.getElementById('twitter').value,
+              youtube: document.getElementById('youtube').value,
+              behance: document.getElementById('behance').value,
+              github: document.getElementById('github').value
+            }
+          };
+          const docRef = await addDoc(collection(db, 'clients'), data);
+          statusDiv.innerHTML = 'Client account created successfully!<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+          document.getElementById('clientForm').reset();
+        } catch (err) {
+          statusDiv.textContent = 'Error: ' + err.message;
+        }
+      });
+    </script>
+</body>
+</html>

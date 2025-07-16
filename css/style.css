@@ -1,0 +1,12 @@
+body {
+    background-color: white;
+}
+
+.avatar-wrapper {
+    width: 50%;
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    border-radius: 50%;
+}
