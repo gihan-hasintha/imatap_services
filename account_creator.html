@@ -509,7 +509,8 @@
                         behance: behanceArray,
                         github: githubArray
                     },
-                    experiences: experiences
+                    experiences: experiences,
+                    galleryUrls: galleryUrls
                 };
                 const docRef = await addDoc(collection(db, 'clients'), data);
                 statusDiv.innerHTML = 'Client account created successfully!<br><a href="account.html?id=' + docRef.id + '">View Account</a>';

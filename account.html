@@ -81,6 +81,8 @@
                 <h3>Home</h3>
                 
             <div id="profileIntro"></div>
+
+            <div id="gallerySection" class="gallery-section"></div>
               </div>
               <div id="Contact" class="tab-content">
                 <h3>Contact</h3>
@@ -125,8 +127,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
@@ -313,6 +313,17 @@
             document.getElementById('contactInfo').innerHTML = info.contact;
             document.getElementById('workInfo').innerHTML = info.work;
             document.getElementById('socialInfo').innerHTML = info.social;
+            const gallerySection = document.getElementById('gallerySection');
+            if (Array.isArray(data.galleryUrls) && data.galleryUrls.length > 0) {
+                gallerySection.innerHTML = `
+                    <h3>Gallery Photos</h3>
+                    <div class="gallery-photos">
+                        ${data.galleryUrls.map(url => `<img src="${url}" class="gallery-photo" style="max-width:150px;max-height:150px;margin:8px;border-radius:8px;box-shadow:0 2px 8px #0001;">`).join('')}
+                    </div>
+                `;
+            } else {
+                gallerySection.innerHTML = '';
+            }
         }
         loadAccount();
         // Tab switching (About/Gallery)
