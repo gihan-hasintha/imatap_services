@@ -63,12 +63,50 @@
         </div>
 
         <div class="info-card" id="infoCard">
-            <div class="tab-bar">
-                <button class="tab-btn active" id="contactTab">Contact</button>
-                <button class="tab-btn" id="workTab">Work</button>
-                <button class="tab-btn" id="socialTab">Social</button>
+            <div class="tab-container" id="tabContainer">
+                <button class="tab-button active" data-tab="home">Home</button>
+                <button class="tab-button" id="contactTab" data-tab="Contact">Contact</button>
+                <button class="tab-button" id="workTab" data-tab="Work">Work</button>
+                <button class="tab-button" id="socialTab" data-tab="Social">Social</button>
+                <div class="tab-underline" id="tabUnderline"></div>
+              </div>
+              
+              <div id="home" class="tab-content active">
+                <h3>Home</h3>
+                <div id="fb-root"></div>
+                <script async defer crossorigin="anonymous" 
+                  src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0" nonce="FbPlugin">
+                </script>
+              
+                <!-- Facebook Page Plugin -->
+                <div class="fb-page" 
+                     data-href="https://www.facebook.com/gihan.hettiarachchii" 
+                     data-tabs="timeline" 
+                     data-width="500" 
+                     data-height="700"
+                     data-small-header="false" 
+                     data-adapt-container-width="true" 
+                     data-hide-cover="true" 
+                     data-show-facepile="true">
+                  <blockquote cite="https://www.facebook.com/YOUR_PAGE_NAME" class="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/YOUR_PAGE_NAME">Visit our Facebook Page</a>
+                  </blockquote>
+                </div>
+              </div>
+              <div id="Contact" class="tab-content">
+                <h3>Contact</h3>
+                <div id="contactInfo" class="info-category"></div>
+              </div>
+              <div id="Work" class="tab-content">
+                <h3>Work</h3>
+                <div id="workInfo" class="info-category" style="display:none"></div>
+              </div>
+              <div id="Social" class="tab-content">
+                <h3>Social</h3>
+                <div id="socialInfo" class="info-category" style="display:none"></div>
+              </div>
+            <div id="contactInfo" class="info-category">
             </div>
-            <div id="contactInfo" class="info-category"></div>
             <div id="workInfo" class="info-category" style="display:none"></div>
             <div id="socialInfo" class="info-category" style="display:none"></div>
         </div>
@@ -118,6 +156,9 @@
             return params.get('id');
         }
         function renderInfoCard(data) {
+            document.getElementById("personalcontactnumberphonecall").href = `tel:${data.phone}`;
+            document.getElementById("profilewhatsappnumber").href = `https://wa.me/${data.whatsapp}?text=Hi%20there!%20I'm%20reaching%20out%20from%20ImaTap%20Card`;
+            document.getElementById("profilefacebooklink").href = `${data.social.facebook}`;
             return {
                 contact: `
                     <div class="info-field"><span class="info-label">Email:</span> <span class="info-value">${data.email || ''}</span></div>
@@ -256,5 +297,6 @@
             });
         });
     </script>
+    <script src="./assets/js/script.js"></script>
 </body>
 </html> 
