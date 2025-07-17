@@ -151,6 +151,49 @@
             document.getElementById("profile-working-top").innerHTML = `${data.jobRole || ''} at ${data.company || ''}`;
             document.getElementById("profilewhatsappnumber").href = `https://wa.me/${data.whatsapp}?text=Hi%20there!%20I'm%20reaching%20out%20from%20ImaTap%20Card`;
             document.getElementById("profilefacebooklink").href = `${data.social.facebook}`;
+
+            // List of supported social networks and their icons
+            const socialNetworks = [
+                { key: 'facebook', icon: './assets/img/facebook-logo.png', iconClass: 'infofidicfb', display: 'Facebook' },
+                { key: 'tiktok', icon: './assets/img/tik-tok.png', iconClass: 'infofidictiktok', display: 'Tiktok' },
+                { key: 'linkedin', icon: './assets/img/linkedin-logo.png', iconClass: 'infofidiclinkd', display: 'Linkedin' },
+                { key: 'twitter', icon: './assets/img/twitter.png', iconClass: 'infofidicltwitter', display: 'X (Twitter)' },
+                { key: 'youtube', icon: './assets/img/youtube.png', iconClass: 'infofidicltwyt', display: 'Youtube' },
+                { key: 'behance', icon: './assets/img/facebook-logo.png', iconClass: '', display: 'Behance' },
+                { key: 'github', icon: './assets/img/github.png', iconClass: 'infofidicltwytgithub', display: 'Github' },
+                { key: 'instagram', icon: './assets/img/instagram.png', iconClass: '', display: 'Instagram' }
+            ];
+
+            let socialHtml = '';
+            let hasAnySocial = false;
+
+            socialNetworks.forEach(network => {
+                const links = Array.isArray(data.social?.[network.key]) ? data.social[network.key] : [];
+                if (links.length > 0) {
+                    hasAnySocial = true;
+                    links.forEach(link => {
+                        socialHtml += `
+                            <div class="info-field">
+                                <div class="info-field-content">
+                                    <div class="info-field-icon ${network.iconClass}">
+                                        <img src="${network.icon}" alt="">
+                                    </div>
+                                    <div class="info-field-txt">
+                                        <a href="${link.url}" target="_blank" title="${network.display}">${network.display}${link.label ? ` (${link.label})` : ''}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            if (hasAnySocial) {
+                socialHtml = `<div class="info-field socials">${socialHtml}</div>`;
+            } else {
+                socialHtml = `<div class="info-field">No social links provided.</div>`;
+            }
+
             return {
                 contact: `
                 <div class="info-field">
@@ -219,7 +262,18 @@
                 </div>
             </div>
                 `,
-                work: `
+                work: Array.isArray(data.experiences) && data.experiences.length > 0 ?
+                    data.experiences.map(exp => `
+                        <div class="info-field">
+                            <div class="info-field-content">
+                                <div class="info-field-icon">
+                                    <img src="./assets/img/portfolio.png" alt="">
+                                </div>
+                                <div class="info-field-txt">${exp.jobRole || ''}${exp.company ? ` at ${exp.company}` : ''}</div>
+                            </div>
+                        </div>
+                    `).join('')
+                : `
             <div class="info-field">
                 <div class="info-field-content">
                     <div class="info-field-icon">
@@ -229,81 +283,7 @@
                 </div>
             </div>
                 `,
-                social: `
-            <div class="info-field socials">
-                
-            ${data.social?.facebook ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon infofidicfb">
-                        <img src="./assets/img/facebook-logo.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.facebook}" target="_blank" title="facebook">Facebook</a>
-                        </div>
-                </div>
-            </div>` : ''}
-                        ${data.social?.tiktok ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon infofidictiktok">
-                        <img src="./assets/img/tik-tok.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.tiktok}" target="_blank" title="facebook">Tiktok</a>
-                        </div>
-                </div>
-            </div>` : ''}
-                        ${data.social?.linkedin ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon infofidiclinkd">
-                        <img src="./assets/img/linkedin-logo.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.linkedin}" target="_blank" title="facebook">Linkedin</a>
-                        </div>
-                </div>
-            </div>` : ''}
-            ${data.social?.twitter ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon infofidicltwitter">
-                        <img src="./assets/img/twitter.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.twitter}" target="_blank" title="facebook">X (Twitter)</a>
-                        </div>
-                </div>
-            </div>` : ''}
-            ${data.social?.youtube ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon infofidicltwyt">
-                        <img src="./assets/img/youtube.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.youtube}" target="_blank" title="facebook">Youtube</a>
-                        </div>
-                </div>
-            </div>` : ''}
-            ${data.social?.behance ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon">
-                        <img src="./assets/img/facebook-logo.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.behance}" target="_blank" title="facebook">Behance</a>
-                        </div>
-                </div>
-            </div>` : ''}
-            ${data.social?.github ? `<div class="info-field">
-                <div class="info-field-content">
-                    <div class="info-field-icon infofidicltwytgithub">
-                        <img src="./assets/img/github.png" alt="">
-                    </div>
-                    <div class="info-field-txt">
-                        <a href="${data.social.github}" target="_blank" title="github">Github</a>
-                        </div>
-                </div>
-            </div>` : ''}
-                    </div>
-                `
+                social: socialHtml
             };
         }
         async function loadAccount() {

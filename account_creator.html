@@ -57,6 +57,11 @@
                             </div>
                         </div>
                         <form id="clientForm">
+                            <div class="mb-3">
+                                <label class="form-label">Gallery Photos (up to 4):</label>
+                                <input type="file" class="form-control" id="galleryPhotos" accept="image/*" multiple>
+                                <div class="d-flex flex-wrap mt-2" id="galleryPreview"></div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="form-label">Full Name: <input type="text" class="form-control" id="fullName" required></label>
@@ -72,6 +77,10 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Company: <input type="text" class="form-control" id="company" required></label>
                                 </div>
+                            </div>
+                            <div id="experienceContainer"></div>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="addExperienceBtn">Add More Experience</button>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -100,26 +109,61 @@
                             <fieldset class="mt-3">
                                 <legend>Social Media Links (optional)</legend>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Facebook: <input type="url" class="form-control" id="facebook"></label>
+                                    <div class="col-md-6" id="facebookContainer">
+                                        <label class="form-label">Facebook:
+                                            <input type="url" class="form-control facebook-input" name="facebook">
+                                            <input type="text" class="form-control facebook-label-input mt-1" name="facebookLabel" placeholder="Description (e.g. personal, business page)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addFacebookBtn">Add More</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">TikTok: <input type="url" class="form-control" id="tiktok"></label>
+                                    <div class="col-md-6" id="instagramContainer">
+                                        <label class="form-label">Instagram:
+                                            <input type="url" class="form-control instagram-input" name="instagram">
+                                            <input type="text" class="form-control instagram-label-input mt-1" name="instagramLabel" placeholder="Description (e.g. personal, business)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addInstagramBtn">Add More</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">LinkedIn: <input type="url" class="form-control" id="linkedin"></label>
+                                    <div class="col-md-6" id="tiktokContainer">
+                                        <label class="form-label">TikTok:
+                                            <input type="url" class="form-control tiktok-input" name="tiktok">
+                                            <input type="text" class="form-control tiktok-label-input mt-1" name="tiktokLabel" placeholder="Description (e.g. personal, business)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addTikTokBtn">Add More</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">X (Twitter): <input type="url" class="form-control" id="twitter"></label>
+                                    <div class="col-md-6" id="linkedinContainer">
+                                        <label class="form-label">LinkedIn:
+                                            <input type="url" class="form-control linkedin-input" name="linkedin">
+                                            <input type="text" class="form-control linkedin-label-input mt-1" name="linkedinLabel" placeholder="Description (e.g. personal, business)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addLinkedInBtn">Add More</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">YouTube: <input type="url" class="form-control" id="youtube"></label>
+                                    <div class="col-md-6" id="twitterContainer">
+                                        <label class="form-label">X (Twitter):
+                                            <input type="url" class="form-control twitter-input" name="twitter">
+                                            <input type="text" class="form-control twitter-label-input mt-1" name="twitterLabel" placeholder="Description (e.g. personal, business)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addTwitterBtn">Add More</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Behance: <input type="url" class="form-control" id="behance"></label>
+                                    <div class="col-md-6" id="youtubeContainer">
+                                        <label class="form-label">YouTube:
+                                            <input type="url" class="form-control youtube-input" name="youtube">
+                                            <input type="text" class="form-control youtube-label-input mt-1" name="youtubeLabel" placeholder="Description (e.g. channel, business)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addYouTubeBtn">Add More</button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">GitHub: <input type="url" class="form-control" id="github"></label>
+                                    <div class="col-md-6" id="behanceContainer">
+                                        <label class="form-label">Behance:
+                                            <input type="url" class="form-control behance-input" name="behance">
+                                            <input type="text" class="form-control behance-label-input mt-1" name="behanceLabel" placeholder="Description (e.g. portfolio, business)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addBehanceBtn">Add More</button>
+                                    </div>
+                                    <div class="col-md-6" id="githubContainer">
+                                        <label class="form-label">GitHub:
+                                            <input type="url" class="form-control github-input" name="github">
+                                            <input type="text" class="form-control github-label-input mt-1" name="githubLabel" placeholder="Description (e.g. personal, work)">
+                                        </label>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="addGitHubBtn">Add More</button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -235,6 +279,122 @@
             }, 'image/webp');
         });
 
+        // Add dynamic add-more logic for all social media
+        const addMoreConfigs = [
+            { btn: 'addFacebookBtn', container: 'facebookContainer', className: 'facebook-input', labelClass: 'facebook-label-input', placeholder: 'Additional Facebook URL', labelPlaceholder: 'Description (e.g. personal, business page)' },
+            { btn: 'addInstagramBtn', container: 'instagramContainer', className: 'instagram-input', labelClass: 'instagram-label-input', placeholder: 'Additional Instagram URL', labelPlaceholder: 'Description (e.g. personal, business)' },
+            { btn: 'addTikTokBtn', container: 'tiktokContainer', className: 'tiktok-input', labelClass: 'tiktok-label-input', placeholder: 'Additional TikTok URL', labelPlaceholder: 'Description (e.g. personal, business)' },
+            { btn: 'addLinkedInBtn', container: 'linkedinContainer', className: 'linkedin-input', labelClass: 'linkedin-label-input', placeholder: 'Additional LinkedIn URL', labelPlaceholder: 'Description (e.g. personal, business)' },
+            { btn: 'addTwitterBtn', container: 'twitterContainer', className: 'twitter-input', labelClass: 'twitter-label-input', placeholder: 'Additional Twitter URL', labelPlaceholder: 'Description (e.g. personal, business)' },
+            { btn: 'addYouTubeBtn', container: 'youtubeContainer', className: 'youtube-input', labelClass: 'youtube-label-input', placeholder: 'Additional YouTube URL', labelPlaceholder: 'Description (e.g. channel, business)' },
+            { btn: 'addBehanceBtn', container: 'behanceContainer', className: 'behance-input', labelClass: 'behance-label-input', placeholder: 'Additional Behance URL', labelPlaceholder: 'Description (e.g. portfolio, business)' },
+            { btn: 'addGitHubBtn', container: 'githubContainer', className: 'github-input', labelClass: 'github-label-input', placeholder: 'Additional GitHub URL', labelPlaceholder: 'Description (e.g. personal, work)' }
+        ];
+        addMoreConfigs.forEach(cfg => {
+            document.getElementById(cfg.btn).addEventListener('click', function() {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'mt-2';
+                const newInput = document.createElement('input');
+                newInput.type = 'url';
+                newInput.className = 'form-control ' + cfg.className;
+                newInput.name = cfg.className.replace('-input', '');
+                newInput.placeholder = cfg.placeholder;
+                const newLabelInput = document.createElement('input');
+                newLabelInput.type = 'text';
+                newLabelInput.className = 'form-control mt-1 ' + cfg.labelClass;
+                newLabelInput.name = cfg.labelClass.replace('-label-input', 'Label');
+                newLabelInput.placeholder = cfg.labelPlaceholder;
+                wrapper.appendChild(newInput);
+                wrapper.appendChild(newLabelInput);
+                document.getElementById(cfg.container).appendChild(wrapper);
+            });
+        });
+
+        document.getElementById('addExperienceBtn').addEventListener('click', function() {
+            const container = document.getElementById('experienceContainer');
+            const row = document.createElement('div');
+            row.className = 'row mt-2';
+            row.innerHTML = `
+                <div class="col-md-6">
+                    <input type="text" class="form-control exp-company" placeholder="Company Name" required>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control exp-jobrole" placeholder="Job Role" required>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+
+        let galleryFiles = [];
+        let galleryDataUrls = [];
+
+        document.getElementById('galleryPhotos').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files).slice(0, 4 - galleryFiles.length); // Only allow up to 4
+            files.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    galleryFiles.push(file);
+                    galleryDataUrls.push(evt.target.result);
+                    renderGalleryPreview();
+                };
+                reader.readAsDataURL(file);
+            });
+            // Reset the input so the same file can be selected again if removed
+            e.target.value = '';
+        });
+
+        function renderGalleryPreview() {
+            const preview = document.getElementById('galleryPreview');
+            preview.innerHTML = '';
+            galleryDataUrls.forEach((dataUrl, idx) => {
+                const card = document.createElement('div');
+                card.className = 'card me-2 mb-2';
+                card.style.width = '120px';
+                card.innerHTML = `
+                    <img src="${dataUrl}" class="card-img-top" style="height:80px;object-fit:cover;">
+                    <div class="card-body p-2">
+                        <button type="button" class="btn btn-sm btn-danger w-100" data-idx="${idx}">Remove</button>
+                    </div>
+                `;
+                preview.appendChild(card);
+            });
+
+            // Add remove event listeners
+            preview.querySelectorAll('button[data-idx]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-idx'));
+                    galleryFiles.splice(idx, 1);
+                    galleryDataUrls.splice(idx, 1);
+                    renderGalleryPreview();
+                });
+            });
+        }
+
+        function dataUrlToWebpBlob(dataUrl, maxWidth = 800, maxHeight = 800) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = function() {
+                    // Resize if needed
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth || height > maxHeight) {
+                        const scale = Math.min(maxWidth / width, maxHeight / height);
+                        width = width * scale;
+                        height = height * scale;
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/webp', 0.92);
+                };
+                img.src = dataUrl;
+            });
+        }
+
         document.getElementById('clientForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const statusDiv = document.getElementById('status');
@@ -271,8 +431,61 @@
                 const coverData = await coverRes.json();
                 if (!coverData.secure_url) throw new Error('Cover photo upload failed');
                 coverPhotoUrl = coverData.secure_url;
+                statusDiv.textContent = 'Uploading gallery photos...';
+                let galleryUrls = [];
+                for (let i = 0; i < galleryDataUrls.length; i++) {
+                    if (!galleryDataUrls[i]) continue;
+                    const webpBlob = await dataUrlToWebpBlob(galleryDataUrls[i]);
+                    const formData = new FormData();
+                    formData.append('file', webpBlob, 'gallery' + (i+1) + '.webp');
+                    formData.append('upload_preset', unsignedUploadPreset);
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if (!data.secure_url) throw new Error('Gallery photo upload failed');
+                    galleryUrls.push(data.secure_url);
+                }
                 statusDiv.textContent = 'Saving data to Firestore...';
-                // Collect form data
+                // Collect all social media inputs as arrays of objects
+                function collectSocialArray(urlClass, labelClass) {
+                    const urls = document.querySelectorAll('.' + urlClass);
+                    const labels = document.querySelectorAll('.' + labelClass);
+                    const arr = [];
+                    for (let i = 0; i < urls.length; i++) {
+                        if (urls[i].value) {
+                            arr.push({ url: urls[i].value, label: labels[i] ? labels[i].value : '' });
+                        }
+                    }
+                    return arr;
+                }
+                const facebookArray = collectSocialArray('facebook-input', 'facebook-label-input');
+                const instagramArray = collectSocialArray('instagram-input', 'instagram-label-input');
+                const tiktokArray = collectSocialArray('tiktok-input', 'tiktok-label-input');
+                const linkedinArray = collectSocialArray('linkedin-input', 'linkedin-label-input');
+                const twitterArray = collectSocialArray('twitter-input', 'twitter-label-input');
+                const youtubeArray = collectSocialArray('youtube-input', 'youtube-label-input');
+                const behanceArray = collectSocialArray('behance-input', 'behance-label-input');
+                const githubArray = collectSocialArray('github-input', 'github-label-input');
+
+                // Collect all working experiences
+                const experiences = [];
+                // Add the original fields
+                const mainCompany = document.getElementById('company').value;
+                const mainJobRole = document.getElementById('jobRole').value;
+                if (mainCompany && mainJobRole) {
+                    experiences.push({ company: mainCompany, jobRole: mainJobRole });
+                }
+                // Add dynamically added experiences
+                const expCompanies = document.querySelectorAll('.exp-company');
+                const expJobRoles = document.querySelectorAll('.exp-jobrole');
+                for (let i = 0; i < expCompanies.length; i++) {
+                    if (expCompanies[i].value && expJobRoles[i].value) {
+                        experiences.push({ company: expCompanies[i].value, jobRole: expJobRoles[i].value });
+                    }
+                }
+
                 const data = {
                     avatarUrl: cloudinaryData.secure_url,
                     coverPhotoUrl: coverPhotoUrl,
@@ -287,14 +500,16 @@
                     school: document.getElementById('school').value,
                     website: document.getElementById('website').value,
                     social: {
-                        facebook: document.getElementById('facebook').value,
-                        tiktok: document.getElementById('tiktok').value,
-                        linkedin: document.getElementById('linkedin').value,
-                        twitter: document.getElementById('twitter').value,
-                        youtube: document.getElementById('youtube').value,
-                        behance: document.getElementById('behance').value,
-                        github: document.getElementById('github').value
-                    }
+                        facebook: facebookArray,
+                        instagram: instagramArray,
+                        tiktok: tiktokArray,
+                        linkedin: linkedinArray,
+                        twitter: twitterArray,
+                        youtube: youtubeArray,
+                        behance: behanceArray,
+                        github: githubArray
+                    },
+                    experiences: experiences
                 };
                 const docRef = await addDoc(collection(db, 'clients'), data);
                 statusDiv.innerHTML = 'Client account created successfully!<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
@@ -305,6 +520,10 @@
                 coverBlob = null;
                 document.getElementById('cropAvatarBtn').disabled = true;
                 document.getElementById('cropCoverBtn').disabled = true;
+                document.getElementById('galleryPhotos').value = '';
+                galleryFiles = [];
+                galleryDataUrls = [];
+                renderGalleryPreview();
             } catch (err) {
                 statusDiv.textContent = 'Error: ' + err.message;
             }
