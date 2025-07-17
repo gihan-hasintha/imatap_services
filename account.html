@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Account</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+/>
 </head>
 <body>
+    
     <div class="profile-bg"></div>
     <div class="main-card">
         <div class="photo-section-of-profile">
@@ -20,28 +27,73 @@
         <div class="profile-details">
             <div class="profile-name" id="profileName">Loading...</div>
             <div class="profile-intro" id="profileIntro"></div>
+
+            <div class="profile-details-buttons-for-contact">
+                <div class="profile-details-buttons-for-contact-bt-db">
+                    <a href="" id="personalcontactnumberphonecall">
+                        <div class="profile-details-buttons-for-contact-bt-db-link-icon">
+                            <img src="./assets/img/phone-call.png" alt="">
+                        </div>
+                        <div class="profile-details-buttons-for-contact-bt-db-txt">
+                            Call me
+                        </div>
+                    </a>
+                    <a href="" target="_blank" id="profilewhatsappnumber">
+                        <div class="profile-details-buttons-for-contact-bt-db-link-icon">
+                            <ion-icon name="logo-whatsapp"></ion-icon>
+                        </div>
+                        <div class="profile-details-buttons-for-contact-bt-db-txt">
+                            Whatsapp
+                        </div>
+                    </a>
+                </div>
+
+                <div class="profile-details-buttons-for-contact-bt-db profile-details-buttons-for-contact-bt-dbfb">
+                    <a href="" target="_blank" id="profilefacebooklink">
+                        <div class="profile-details-buttons-for-contact-bt-db-link-icon">
+                            <img src="./assets/img/facebook.png" alt="">
+                        </div>
+                        <div class="profile-details-buttons-for-contact-bt-db-txt">
+                            View facebook profile
+                        </div>
+                    </a>
+                </div>
+
+            </div>
         </div>
 
-        <div class="action-row">
-            <button class="action-btn" id="saveBtn" title="Save Contact">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14m7-7H5"/></svg>
-                Save
-            </button>
-            <button class="action-btn" id="connectBtn" title="Connect">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
-                Connect
-            </button>
-            <button class="action-btn" id="shareBtn" title="Share">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v.01M12 4v.01M20 12v.01M12 20v.01"/></svg>
-                Share
-            </button>
-        </div>
         <div class="info-card" id="infoCard">
-            <!-- Info fields will be injected here -->
+            <div id="contactInfo" class="info-category"></div>
+            <div id="workInfo" class="info-category" style="display:none"></div>
+            <div id="socialInfo" class="info-category" style="display:none"></div>
         </div>
         <div class="tab-bar">
-            <button class="tab-btn active" id="aboutTab">About</button>
-            <button class="tab-btn" id="galleryTab">Gallery</button>
+            <button class="tab-btn active" id="contactTab">Contact</button>
+            <button class="tab-btn" id="workTab">Work</button>
+            <button class="tab-btn" id="socialTab">Social</button>
+        </div>
+    </div>
+
+    <div id="footer-profile">
+        <div id="footer-section-on-account">
+            <div class="footer-section-on-account-content">
+                <a href="" id="personalcontactnumberphonecall">
+                    <div class="profile-details-buttons-for-contact-bt-db-link-icon">
+                        <img src="./assets/img/add-user.png" alt="">
+                    </div>
+                    <div class="profile-details-buttons-for-contact-bt-db-txt">
+                        Contact Save
+                    </div>
+                </a>
+                <a href="" target="_blank" id="profilewhatsappnumber">
+                    <div class="profile-details-buttons-for-contact-bt-db-link-icon">
+                        <img src="./assets/img/sharing.png" alt="">
+                    </div>
+                    <div class="profile-details-buttons-for-contact-bt-db-txt">
+                        Contact Share
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -64,25 +116,31 @@
             return params.get('id');
         }
         function renderInfoCard(data) {
-            return `
-                <div class="info-field"><span class="info-label">Email:</span> <span class="info-value">${data.email || ''}</span></div>
-                <div class="info-field"><span class="info-label">Job Role:</span> <span class="info-value">${data.jobRole || ''}</span></div>
-                <div class="info-field"><span class="info-label">Company:</span> <span class="info-value">${data.company || ''}</span></div>
-                <div class="info-field"><span class="info-label">Phone:</span> <span class="info-value">${data.phone || ''}</span></div>
-                <div class="info-field"><span class="info-label">Whatsapp:</span> <span class="info-value">${data.whatsapp || ''}</span></div>
-                <div class="info-field"><span class="info-label">Mobile:</span> <span class="info-value">${data.mobile || ''}</span></div>
-                <div class="info-field"><span class="info-label">Address:</span> <span class="info-value">${data.address || ''}</span></div>
-                ${data.website ? `<div class="info-field"><span class="info-label">Website:</span> <a class="info-value" href="${data.website}" target="_blank">${data.website}</a></div>` : ''}
-                <div class="info-field socials">
-                    ${data.social?.facebook ? `<a href="${data.social.facebook}" target="_blank" title="Facebook">&#xf09a;</a>` : ''}
-                    ${data.social?.tiktok ? `<a href="${data.social.tiktok}" target="_blank" title="TikTok">&#xe07b;</a>` : ''}
-                    ${data.social?.linkedin ? `<a href="${data.social.linkedin}" target="_blank" title="LinkedIn">&#xf0e1;</a>` : ''}
-                    ${data.social?.twitter ? `<a href="${data.social.twitter}" target="_blank" title="X (Twitter)">&#xf099;</a>` : ''}
-                    ${data.social?.youtube ? `<a href="${data.social.youtube}" target="_blank" title="YouTube">&#xf167;</a>` : ''}
-                    ${data.social?.behance ? `<a href="${data.social.behance}" target="_blank" title="Behance">&#xf1b4;</a>` : ''}
-                    ${data.social?.github ? `<a href="${data.social.github}" target="_blank" title="GitHub">&#xf09b;</a>` : ''}
-                </div>
-            `;
+            return {
+                contact: `
+                    <div class="info-field"><span class="info-label">Email:</span> <span class="info-value">${data.email || ''}</span></div>
+                    <div class="info-field"><span class="info-label">Phone:</span> <span class="info-value">${data.phone || ''}</span></div>
+                    <div class="info-field"><span class="info-label">Whatsapp:</span> <span class="info-value">${data.whatsapp || ''}</span></div>
+                    <div class="info-field"><span class="info-label">Mobile:</span> <span class="info-value">${data.mobile || ''}</span></div>
+                    <div class="info-field"><span class="info-label">Address:</span> <span class="info-value">${data.address || ''}</span></div>
+                `,
+                work: `
+                    <div class="info-field"><span class="info-label">Job Role:</span> <span class="info-value">${data.jobRole || ''}</span></div>
+                    <div class="info-field"><span class="info-label">Company:</span> <span class="info-value">${data.company || ''}</span></div>
+                    ${data.website ? `<div class="info-field"><span class="info-label">Website:</span> <a class="info-value" href="${data.website}" target="_blank">${data.website}</a></div>` : ''}
+                `,
+                social: `
+                    <div class="info-field socials">
+                        ${data.social?.facebook ? `<a href="${data.social.facebook}" target="_blank" title="Facebook">&#xf09a;</a>` : ''}
+                        ${data.social?.tiktok ? `<a href="${data.social.tiktok}" target="_blank" title="TikTok">&#xe07b;</a>` : ''}
+                        ${data.social?.linkedin ? `<a href="${data.social.linkedin}" target="_blank" title="LinkedIn">&#xf0e1;</a>` : ''}
+                        ${data.social?.twitter ? `<a href="${data.social.twitter}" target="_blank" title="X (Twitter)">&#xf099;</a>` : ''}
+                        ${data.social?.youtube ? `<a href="${data.social.youtube}" target="_blank" title="YouTube">&#xf167;</a>` : ''}
+                        ${data.social?.behance ? `<a href="${data.social.behance}" target="_blank" title="Behance">&#xf1b4;</a>` : ''}
+                        ${data.social?.github ? `<a href="${data.social.github}" target="_blank" title="GitHub">&#xf09b;</a>` : ''}
+                    </div>
+                `
+            };
         }
         async function loadAccount() {
             const id = getIdFromUrl();
@@ -102,23 +160,98 @@
                 return;
             }
             const data = docSnap.data();
+            window.loadedProfileData = data; // Store globally for vCard
             avatarImg.src = data.avatarUrl || '';
             coverPhotoImg.style.backgroundImage = data.coverPhoto ? `url('${data.coverPhoto}')` : '';
             profileName.textContent = data.fullName || '';
             profileIntro.textContent = data.intro || `Hi! My name is ${data.fullName || ''}. It's nice to meet you.`;
-            infoCard.innerHTML = renderInfoCard(data);
+            const info = renderInfoCard(data);
+            document.getElementById('contactInfo').innerHTML = info.contact;
+            document.getElementById('workInfo').innerHTML = info.work;
+            document.getElementById('socialInfo').innerHTML = info.social;
         }
         loadAccount();
         // Tab switching (About/Gallery)
-        document.getElementById('aboutTab').addEventListener('click', function() {
-            this.classList.add('active');
-            document.getElementById('galleryTab').classList.remove('active');
-            document.getElementById('infoCard').style.display = '';
+        document.getElementById('contactTab').addEventListener('click', function() {
+            setActiveTab('contact');
         });
-        document.getElementById('galleryTab').addEventListener('click', function() {
-            this.classList.add('active');
-            document.getElementById('aboutTab').classList.remove('active');
-            document.getElementById('infoCard').style.display = 'none';
+        document.getElementById('workTab').addEventListener('click', function() {
+            setActiveTab('work');
+        });
+        document.getElementById('socialTab').addEventListener('click', function() {
+            setActiveTab('social');
+        });
+
+        function setActiveTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+            document.querySelectorAll('.info-category').forEach(div => div.style.display = 'none');
+            document.getElementById(tab + 'Info').style.display = '';
+        }
+        // vCard download for footer 'Contact Save' button
+        document.querySelectorAll('#footer-profile #personalcontactnumberphonecall').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const data = window.loadedProfileData;
+                if (!data) return;
+                let vcard = `BEGIN:VCARD\nVERSION:3.0\n`;
+                vcard += `FN:${data.fullName || ''}\n`;
+                vcard += `ORG:${data.company || ''}\n`;
+                vcard += `TITLE:${data.jobRole || ''}\n`;
+                vcard += `TEL;TYPE=CELL:${data.phone || data.mobile || ''}\n`;
+                vcard += `EMAIL:${data.email || ''}\n`;
+                vcard += `ADR;TYPE=HOME:;;${data.address || ''};;;;\n`;
+                if (data.website) vcard += `URL:${data.website}\n`;
+                if (data.social?.facebook) vcard += `X-SOCIALPROFILE;type=facebook:${data.social.facebook}\n`;
+                if (data.social?.linkedin) vcard += `X-SOCIALPROFILE;type=linkedin:${data.social.linkedin}\n`;
+                if (data.social?.twitter) vcard += `X-SOCIALPROFILE;type=twitter:${data.social.twitter}\n`;
+                if (data.social?.github) vcard += `X-SOCIALPROFILE;type=github:${data.social.github}\n`;
+                vcard += `END:VCARD`;
+                const blob = new Blob([vcard], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = (data.fullName || 'contact') + '.vcf';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            });
+        });
+        // Share link for footer 'Contact Share' button
+        document.querySelectorAll('#footer-profile #profilewhatsappnumber').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const data = window.loadedProfileData;
+                if (!data) return;
+                const shareText = data && data.fullName
+                    ? `Check out ${data.fullName}'s profile on ImaTAP!`
+                    : 'Check out this profile!';
+                const shareData = {
+                    title: document.title,
+                    text: shareText,
+                    url: window.location.href,
+                };
+                // Try to share image if supported
+                if (navigator.canShare && data && data.avatarUrl) {
+                    fetch(data.avatarUrl)
+                      .then(response => response.blob())
+                      .then(blob => {
+                        const file = new File([blob], "/assets/img/sharing.png", { type: blob.type });
+                        if (navigator.canShare({ files: [file] })) {
+                            shareData.files = [file];
+                        }
+                        navigator.share(shareData).catch(() => {});
+                      })
+                      .catch(() => {
+                        navigator.share(shareData).catch(() => {});
+                      });
+                } else if (navigator.share) {
+                    navigator.share(shareData).catch(() => {});
+                }
+            });
         });
     </script>
 </body>

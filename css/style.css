@@ -39,7 +39,7 @@ body {
 
 .profile-details {
     text-align: center;
-    width: 80%;
+    width: 85%;
     padding-bottom: 20px;
     margin: 0 auto;
 }
@@ -57,4 +57,75 @@ body {
 
 .profile-intro {
     font-size: 1.0rem;
+    width: 90%;
+    padding-bottom: 10px;
+    margin: 0 auto;
+}
+
+.profile-details-buttons-for-contact-bt-db {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.profile-details-buttons-for-contact-bt-db a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 7px;
+    background-color: #12286b;
+    color: white;
+    text-decoration: none;
+}
+
+.profile-details-buttons-for-contact-bt-dbfb a {
+    background-color: #1e53e4;
+}
+
+.profile-details-buttons-for-contact-bt-db-link-icon {
+    color: white;
+    font-size: 25px;
+    padding-top: 5px;
+}
+
+.profile-details-buttons-for-contact-bt-db-link-icon img {
+    width: 30px;
+}
+
+#footer-section-on-account {
+    position: fixed;
+    width: 100%;
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    z-index: 99;
+    bottom: 0;
+}
+
+.footer-section-on-account-content {
+    display: flex;
+    width: 70%;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+
+.footer-section-on-account-content a {
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: 12px;
+}
+
+.profile-details-buttons-for-contact-bt-db-txt {
+    font-size: 13px;
+    padding-top: 4px;
 }
