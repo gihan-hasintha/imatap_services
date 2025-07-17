@@ -3,100 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Create Client Account</h2>
-    <form id="clientForm">
-        <label>Avatar Image: <input type="file" id="avatar" accept="image/*" required></label><br>
-        <label>Full Name: <input type="text" id="fullName" required></label><br>
-        <label>Email: <input type="email" id="email" required></label><br>
-        <label>Job Role: <input type="text" id="jobRole" required></label><br>
-        <label>Company: <input type="text" id="company" required></label><br>
-        <label>Phone: <input type="text" id="phone" required></label><br>
-        <label>Whatsapp Number: <input type="text" id="whatsapp" required></label><br>
-        <label>Mobile: <input type="text" id="mobile" required></label><br>
-        <label>Address: <input type="text" id="address" required></label><br>
-        <label>Website (optional): <input type="url" id="website"></label><br>
-        <fieldset>
-            <legend>Social Media Links (optional)</legend>
-            <label>Facebook: <input type="url" id="facebook"></label><br>
-            <label>TikTok: <input type="url" id="tiktok"></label><br>
-            <label>LinkedIn: <input type="url" id="linkedin"></label><br>
-            <label>X (Twitter): <input type="url" id="twitter"></label><br>
-            <label>YouTube: <input type="url" id="youtube"></label><br>
-            <label>Behance: <input type="url" id="behance"></label><br>
-            <label>GitHub: <input type="url" id="github"></label><br>
-        </fieldset>
-        <button type="submit">Create Account</button>
-    </form>
-    <div id="status"></div>
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-      // Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
-        authDomain: "imatap.firebaseapp.com",
-        projectId: "imatap",
-        storageBucket: "imatap.firebasestorage.app",
-        messagingSenderId: "385083217755",
-        appId: "1:385083217755:web:83334c40989a9032c8ac7e",
-        measurementId: "G-43CKB8XJBF"
-      };
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-
-      // Cloudinary config (replace with your own)
-      const cloudName = 'dffhwv0m1'; // TODO: Replace
-      const unsignedUploadPreset = 'avatars'; // TODO: Replace
-
-      document.getElementById('clientForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const statusDiv = document.getElementById('status');
-        statusDiv.textContent = 'Uploading avatar...';
-        // Upload avatar to Cloudinary
-        const avatarFile = document.getElementById('avatar').files[0];
-        const formData = new FormData();
-        formData.append('file', avatarFile);
-        formData.append('upload_preset', unsignedUploadPreset);
-        try {
-          const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-            method: 'POST',
-            body: formData
-          });
-          const cloudinaryData = await cloudinaryRes.json();
-          if (!cloudinaryData.secure_url) throw new Error('Cloudinary upload failed');
-          statusDiv.textContent = 'Saving data to Firestore...';
-          // Collect form data
-          const data = {
-            avatarUrl: cloudinaryData.secure_url,
-            fullName: document.getElementById('fullName').value,
-            email: document.getElementById('email').value,
-            jobRole: document.getElementById('jobRole').value,
-            company: document.getElementById('company').value,
-            phone: document.getElementById('phone').value,
-            whatsapp: document.getElementById('whatsapp').value,
-            mobile: document.getElementById('mobile').value,
-            address: document.getElementById('address').value,
-            website: document.getElementById('website').value,
-            social: {
-              facebook: document.getElementById('facebook').value,
-              tiktok: document.getElementById('tiktok').value,
-              linkedin: document.getElementById('linkedin').value,
-              twitter: document.getElementById('twitter').value,
-              youtube: document.getElementById('youtube').value,
-              behance: document.getElementById('behance').value,
-              github: document.getElementById('github').value
-            }
-          };
-          const docRef = await addDoc(collection(db, 'clients'), data);
-          statusDiv.innerHTML = 'Client account created successfully!<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
-          document.getElementById('clientForm').reset();
-        } catch (err) {
-          statusDiv.textContent = 'Error: ' + err.message;
+    <title>Create Client Account</title>
+    <!-- Modern CSS Framework (Bootstrap) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <style>
+        .cropper-container {
+            max-width: 100%;
         }
-      });
+        .img-preview {
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+        }
+        .tab-content {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">Create Client Account</h2>
+                        <ul class="nav nav-tabs" id="photoTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="avatar-tab" data-bs-toggle="tab" data-bs-target="#avatarTabPane" type="button" role="tab">Profile Photo</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="cover-tab" data-bs-toggle="tab" data-bs-target="#coverTabPane" type="button" role="tab">Cover Photo</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="photoTabContent">
+                            <div class="tab-pane fade show active" id="avatarTabPane" role="tabpanel">
+                                <label class="form-label mt-3">Avatar Image (Square):
+                                    <input type="file" class="form-control" id="avatar" accept="image/*" required>
+                                </label>
+                                <div class="img-preview mb-2" id="avatarPreview"></div>
+                                <button type="button" class="btn btn-outline-primary mb-3" id="cropAvatarBtn" disabled>Crop & Preview</button>
+                            </div>
+                            <div class="tab-pane fade" id="coverTabPane" role="tabpanel">
+                                <label class="form-label mt-3">Cover Photo (16:9):
+                                    <input type="file" class="form-control" id="coverPhoto" accept="image/*" required>
+                                </label>
+                                <div class="img-preview mb-2" id="coverPreview"></div>
+                                <button type="button" class="btn btn-outline-primary mb-3" id="cropCoverBtn" disabled>Crop & Preview</button>
+                            </div>
+                        </div>
+                        <form id="clientForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Full Name: <input type="text" class="form-control" id="fullName" required></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email: <input type="email" class="form-control" id="email" required></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Job Role: <input type="text" class="form-control" id="jobRole" required></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Company: <input type="text" class="form-control" id="company" required></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone: <input type="text" class="form-control" id="phone" required></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Whatsapp Number: <input type="text" class="form-control" id="whatsapp" required></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Business Phone: <input type="text" class="form-control" id="business_phone" required></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Address: <input type="text" class="form-control" id="address" required></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">School: <input type="text" class="form-control" id="school" required></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Website (optional): <input type="url" class="form-control" id="website"></label>
+                                </div>
+                            </div>
+                            <fieldset class="mt-3">
+                                <legend>Social Media Links (optional)</legend>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Facebook: <input type="url" class="form-control" id="facebook"></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">TikTok: <input type="url" class="form-control" id="tiktok"></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">LinkedIn: <input type="url" class="form-control" id="linkedin"></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">X (Twitter): <input type="url" class="form-control" id="twitter"></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">YouTube: <input type="url" class="form-control" id="youtube"></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Behance: <input type="url" class="form-control" id="behance"></label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">GitHub: <input type="url" class="form-control" id="github"></label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+                            </div>
+                        </form>
+                        <div id="status" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
+            authDomain: "imatap.firebaseapp.com",
+            projectId: "imatap",
+            storageBucket: "imatap.firebasestorage.app",
+            messagingSenderId: "385083217755",
+            appId: "1:385083217755:web:83334c40989a9032c8ac7e",
+            measurementId: "G-43CKB8XJBF"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Cloudinary config (replace with your own)
+        const cloudName = 'dffhwv0m1'; // TODO: Replace
+        const unsignedUploadPreset = 'avatars'; // TODO: Replace
+
+        let avatarCropper, coverCropper, avatarBlob, coverBlob;
+
+        // Avatar Cropper
+        document.getElementById('avatar').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = document.createElement('img');
+                img.src = evt.target.result;
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '300px';
+                const preview = document.getElementById('avatarPreview');
+                preview.innerHTML = '';
+                preview.appendChild(img);
+                if (avatarCropper) avatarCropper.destroy();
+                avatarCropper = new Cropper(img, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    movable: true,
+                    zoomable: true,
+                    scalable: true,
+                    cropBoxResizable: true
+                });
+                document.getElementById('cropAvatarBtn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('cropAvatarBtn').addEventListener('click', function() {
+            if (!avatarCropper) return;
+            avatarCropper.getCroppedCanvas({ width: 400, height: 400 }).toBlob(function(blob) {
+                avatarBlob = blob;
+                // Show preview
+                const url = URL.createObjectURL(blob);
+                document.getElementById('avatarPreview').innerHTML = `<img src="${url}" style="width:100%;max-width:200px;">`;
+            }, 'image/webp');
+        });
+
+        // Cover Cropper
+        document.getElementById('coverPhoto').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = document.createElement('img');
+                img.src = evt.target.result;
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '300px';
+                const preview = document.getElementById('coverPreview');
+                preview.innerHTML = '';
+                preview.appendChild(img);
+                if (coverCropper) coverCropper.destroy();
+                coverCropper = new Cropper(img, {
+                    aspectRatio: 16/9,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    movable: true,
+                    zoomable: true,
+                    scalable: true,
+                    cropBoxResizable: true
+                });
+                document.getElementById('cropCoverBtn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('cropCoverBtn').addEventListener('click', function() {
+            if (!coverCropper) return;
+            coverCropper.getCroppedCanvas({ width: 1280, height: 720 }).toBlob(function(blob) {
+                coverBlob = blob;
+                // Show preview
+                const url = URL.createObjectURL(blob);
+                document.getElementById('coverPreview').innerHTML = `<img src="${url}" style="width:100%;max-width:300px;">`;
+            }, 'image/webp');
+        });
+
+        document.getElementById('clientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = 'Uploading avatar...';
+            // Upload avatar to Cloudinary
+            if (!avatarBlob) {
+                statusDiv.textContent = 'Please crop and preview the avatar image.';
+                return;
+            }
+            if (!coverBlob) {
+                statusDiv.textContent = 'Please crop and preview the cover photo.';
+                return;
+            }
+            const avatarFormData = new FormData();
+            avatarFormData.append('file', avatarBlob, 'avatar.webp');
+            avatarFormData.append('upload_preset', unsignedUploadPreset);
+            let cloudinaryData, coverPhotoUrl = '';
+            try {
+                const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                    method: 'POST',
+                    body: avatarFormData
+                });
+                cloudinaryData = await cloudinaryRes.json();
+                if (!cloudinaryData.secure_url) throw new Error('Cloudinary upload failed');
+                // Upload cover photo
+                statusDiv.textContent = 'Uploading cover photo...';
+                const coverFormData = new FormData();
+                coverFormData.append('file', coverBlob, 'cover.webp');
+                coverFormData.append('upload_preset', unsignedUploadPreset);
+                const coverRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                    method: 'POST',
+                    body: coverFormData
+                });
+                const coverData = await coverRes.json();
+                if (!coverData.secure_url) throw new Error('Cover photo upload failed');
+                coverPhotoUrl = coverData.secure_url;
+                statusDiv.textContent = 'Saving data to Firestore...';
+                // Collect form data
+                const data = {
+                    avatarUrl: cloudinaryData.secure_url,
+                    coverPhotoUrl: coverPhotoUrl,
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    jobRole: document.getElementById('jobRole').value,
+                    company: document.getElementById('company').value,
+                    phone: document.getElementById('phone').value,
+                    businessPhone: document.getElementById('business_phone').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    address: document.getElementById('address').value,
+                    school: document.getElementById('school').value,
+                    website: document.getElementById('website').value,
+                    social: {
+                        facebook: document.getElementById('facebook').value,
+                        tiktok: document.getElementById('tiktok').value,
+                        linkedin: document.getElementById('linkedin').value,
+                        twitter: document.getElementById('twitter').value,
+                        youtube: document.getElementById('youtube').value,
+                        behance: document.getElementById('behance').value,
+                        github: document.getElementById('github').value
+                    }
+                };
+                const docRef = await addDoc(collection(db, 'clients'), data);
+                statusDiv.innerHTML = 'Client account created successfully!<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+                document.getElementById('clientForm').reset();
+                document.getElementById('avatarPreview').innerHTML = '';
+                document.getElementById('coverPreview').innerHTML = '';
+                avatarBlob = null;
+                coverBlob = null;
+                document.getElementById('cropAvatarBtn').disabled = true;
+                document.getElementById('cropCoverBtn').disabled = true;
+            } catch (err) {
+                statusDiv.textContent = 'Error: ' + err.message;
+            }
+        });
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Account</title>
+    <title>Check out this profile on ImaTAP!</title>
     <link rel="stylesheet" href="/css/style.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -180,7 +180,7 @@
                         <img src="./assets/img/telephone.png" alt="">
                     </div>
                     <div class="info-field-txt">
-                        <a href="tel:${data.business_phone || ''}" target="_blank">${data.business_phone || ''}
+                        <a href="tel:${data.businessPhone || ''}" target="_blank">${data.businessPhone || ''}
                         </a>
                         </div>
                 </div>
@@ -326,7 +326,7 @@
             const data = docSnap.data();
             window.loadedProfileData = data; // Store globally for vCard
             avatarImg.src = data.avatarUrl || '';
-            coverPhotoImg.style.backgroundImage = data.coverPhoto ? `url('${data.coverPhoto}')` : '';
+            coverPhotoImg.style.backgroundImage = data.coverPhotoUrl ? `url('${data.coverPhotoUrl}')` : '';
             profileName.textContent = data.fullName || '';
             profileIntro.textContent = data.intro || `Hi! My name is ${data.fullName || ''}. It's nice to meet you.`;
             const info = renderInfoCard(data);
@@ -398,22 +398,11 @@
                     text: shareText,
                     url: window.location.href,
                 };
-                // Try to share image if supported
-                if (navigator.canShare && data && data.avatarUrl) {
-                    fetch(data.avatarUrl)
-                      .then(response => response.blob())
-                      .then(blob => {
-                        const file = new File([blob], "/assets/img/sharing.png", { type: blob.type });
-                        if (navigator.canShare({ files: [file] })) {
-                            shareData.files = [file];
-                        }
-                        navigator.share(shareData).catch(() => {});
-                      })
-                      .catch(() => {
-                        navigator.share(shareData).catch(() => {});
-                      });
-                } else if (navigator.share) {
-                    navigator.share(shareData).catch(() => {});
+                if (navigator.share) {
+                    navigator.share(shareData)
+                        .catch((err) => { alert('Sharing failed: ' + err); });
+                } else {
+                    alert('Sharing is not supported on this browser.');
                 }
             });
         });
