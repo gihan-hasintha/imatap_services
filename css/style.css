@@ -203,3 +203,77 @@ body {
     width: 90%;
     margin: 0 auto;
 }
+
+.info-field {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.info-field a {
+    text-decoration: none;
+    color: black;
+}
+
+.info-category {
+    list-style: none;
+}
+
+.info-field-icon {
+    background-color: #110341;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50px;
+}
+
+.info-field-icon img {
+    width: 18px;
+}
+
+.info-field-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-field-contentaddresssection {
+    display: flex;
+    align-items: flex-start;
+}
+
+#profile-working-top {
+    font-weight: 500;
+}
+
+.infofidicfb {
+    background-color: #004de8;
+}
+
+.infofidictiktok {
+    background-color: #000000;
+}
+
+.infofidiclinkd {
+    background-color: #0080ff;
+}
+
+.infofidicltwitter {
+    background-color: #000000;
+}
+
+.infofidicltwyt {
+    background-color: #f00;
+}
+
+.infofidicltwytgithub {
+    background-color: #000000;
+}
+
+.info-field .info-field {
+    margin-bottom: 26px;
+}
+
+#contactInfo .info-field {
+    margin-bottom: 24px;
+}

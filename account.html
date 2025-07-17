@@ -26,7 +26,7 @@
         <div class="space-for-profile-details"></div>
         <div class="profile-details">
             <div class="profile-name" id="profileName">Loading...</div>
-            <div class="profile-intro" id="profileIntro"></div>
+            <div class="profile-intro" id="profile-working-top"></div>
 
             <div class="profile-details-buttons-for-contact">
                 <div class="profile-details-buttons-for-contact-bt-db">
@@ -62,6 +62,12 @@
             </div>
         </div>
 
+        <div>
+
+
+
+        </div>
+
         <div class="info-card" id="infoCard">
             <div class="tab-container" id="tabContainer">
                 <button class="tab-button active" data-tab="home">Home</button>
@@ -73,25 +79,8 @@
               
               <div id="home" class="tab-content active">
                 <h3>Home</h3>
-                <div id="fb-root"></div>
-                <script async defer crossorigin="anonymous" 
-                  src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0" nonce="FbPlugin">
-                </script>
-              
-                <!-- Facebook Page Plugin -->
-                <div class="fb-page" 
-                     data-href="https://www.facebook.com/gihan.hettiarachchii" 
-                     data-tabs="timeline" 
-                     data-width="500" 
-                     data-height="700"
-                     data-small-header="false" 
-                     data-adapt-container-width="true" 
-                     data-hide-cover="true" 
-                     data-show-facepile="true">
-                  <blockquote cite="https://www.facebook.com/YOUR_PAGE_NAME" class="fb-xfbml-parse-ignore">
-                    <a href="https://www.facebook.com/YOUR_PAGE_NAME">Visit our Facebook Page</a>
-                  </blockquote>
-                </div>
+                
+            <div id="profileIntro"></div>
               </div>
               <div id="Contact" class="tab-content">
                 <h3>Contact</h3>
@@ -137,6 +126,8 @@
         </div>
     </div>
 
+
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
@@ -157,30 +148,160 @@
         }
         function renderInfoCard(data) {
             document.getElementById("personalcontactnumberphonecall").href = `tel:${data.phone}`;
+            document.getElementById("profile-working-top").innerHTML = `${data.jobRole || ''} at ${data.company || ''}`;
             document.getElementById("profilewhatsappnumber").href = `https://wa.me/${data.whatsapp}?text=Hi%20there!%20I'm%20reaching%20out%20from%20ImaTap%20Card`;
             document.getElementById("profilefacebooklink").href = `${data.social.facebook}`;
             return {
                 contact: `
-                    <div class="info-field"><span class="info-label">Email:</span> <span class="info-value">${data.email || ''}</span></div>
-                    <div class="info-field"><span class="info-label">Phone:</span> <span class="info-value">${data.phone || ''}</span></div>
-                    <div class="info-field"><span class="info-label">Whatsapp:</span> <span class="info-value">${data.whatsapp || ''}</span></div>
-                    <div class="info-field"><span class="info-label">Mobile:</span> <span class="info-value">${data.mobile || ''}</span></div>
-                    <div class="info-field"><span class="info-label">Address:</span> <span class="info-value">${data.address || ''}</span></div>
+                <div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/email (1).png" alt="">
+                    </div>
+                    <div class="info-field-txt">${data.email || ''}</div>
+                </div>
+            </div>
+            
+            <div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/call.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="tel:${data.phone || ''}" target="_blank">${data.phone || ''}
+                        </a>
+                        </div>
+                </div>
+            </div>
+            
+            <div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/telephone.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="tel:${data.business_phone || ''}" target="_blank">${data.business_phone || ''}
+                        </a>
+                        </div>
+                </div>
+            </div>
+
+            <div class="info-field">
+                <div class="info-field-content info-field-contentaddresssection">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/maps-and-flags.png" alt="">
+                    </div>
+                    <div class="info-field-txt">${data.address || ''}</div>
+                </div>
+            </div>
+
+            <div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/whatsapp.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="https://wa.me/${data.whatsapp}?text=Hi%20there!%20I'm%20reaching%20out%20from%20ImaTap%20Card" target="_blank">${data.whatsapp || ''}
+                        </a>
+                        </div>
+                </div>
+            </div>
+
+            <div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/web.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.website}" target="_blank">${data.website || ''}
+                        </a>
+                        </div>
+                </div>
+            </div>
                 `,
                 work: `
-                    <div class="info-field"><span class="info-label">Job Role:</span> <span class="info-value">${data.jobRole || ''}</span></div>
-                    <div class="info-field"><span class="info-label">Company:</span> <span class="info-value">${data.company || ''}</span></div>
-                    ${data.website ? `<div class="info-field"><span class="info-label">Website:</span> <a class="info-value" href="${data.website}" target="_blank">${data.website}</a></div>` : ''}
+            <div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/portfolio.png" alt="">
+                    </div>
+                    <div class="info-field-txt">${data.jobRole || ''} at ${data.company || ''}</div>
+                </div>
+            </div>
                 `,
                 social: `
-                    <div class="info-field socials">
-                        ${data.social?.facebook ? `<a href="${data.social.facebook}" target="_blank" title="Facebook">&#xf09a;</a>` : ''}
-                        ${data.social?.tiktok ? `<a href="${data.social.tiktok}" target="_blank" title="TikTok">&#xe07b;</a>` : ''}
-                        ${data.social?.linkedin ? `<a href="${data.social.linkedin}" target="_blank" title="LinkedIn">&#xf0e1;</a>` : ''}
-                        ${data.social?.twitter ? `<a href="${data.social.twitter}" target="_blank" title="X (Twitter)">&#xf099;</a>` : ''}
-                        ${data.social?.youtube ? `<a href="${data.social.youtube}" target="_blank" title="YouTube">&#xf167;</a>` : ''}
-                        ${data.social?.behance ? `<a href="${data.social.behance}" target="_blank" title="Behance">&#xf1b4;</a>` : ''}
-                        ${data.social?.github ? `<a href="${data.social.github}" target="_blank" title="GitHub">&#xf09b;</a>` : ''}
+            <div class="info-field socials">
+                
+            ${data.social?.facebook ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon infofidicfb">
+                        <img src="./assets/img/facebook-logo.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.facebook}" target="_blank" title="facebook">Facebook</a>
+                        </div>
+                </div>
+            </div>` : ''}
+                        ${data.social?.tiktok ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon infofidictiktok">
+                        <img src="./assets/img/tik-tok.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.tiktok}" target="_blank" title="facebook">Tiktok</a>
+                        </div>
+                </div>
+            </div>` : ''}
+                        ${data.social?.linkedin ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon infofidiclinkd">
+                        <img src="./assets/img/linkedin-logo.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.linkedin}" target="_blank" title="facebook">Linkedin</a>
+                        </div>
+                </div>
+            </div>` : ''}
+            ${data.social?.twitter ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon infofidicltwitter">
+                        <img src="./assets/img/twitter.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.twitter}" target="_blank" title="facebook">X (Twitter)</a>
+                        </div>
+                </div>
+            </div>` : ''}
+            ${data.social?.youtube ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon infofidicltwyt">
+                        <img src="./assets/img/youtube.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.youtube}" target="_blank" title="facebook">Youtube</a>
+                        </div>
+                </div>
+            </div>` : ''}
+            ${data.social?.behance ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon">
+                        <img src="./assets/img/facebook-logo.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.behance}" target="_blank" title="facebook">Behance</a>
+                        </div>
+                </div>
+            </div>` : ''}
+            ${data.social?.github ? `<div class="info-field">
+                <div class="info-field-content">
+                    <div class="info-field-icon infofidicltwytgithub">
+                        <img src="./assets/img/github.png" alt="">
+                    </div>
+                    <div class="info-field-txt">
+                        <a href="${data.social.github}" target="_blank" title="github">Github</a>
+                        </div>
+                </div>
+            </div>` : ''}
                     </div>
                 `
             };
