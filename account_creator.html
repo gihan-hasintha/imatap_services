@@ -72,6 +72,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <label class="form-label">Password: <input type="password" class="form-control" id="password" required></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <label class="form-label">Job Role: <input type="text" class="form-control" id="jobRole" required></label>
                                 </div>
                                 <div class="col-md-6">
@@ -184,6 +189,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
         // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
@@ -395,9 +401,52 @@
             });
         }
 
+        async function sendSMS(recipient, message) {
+            try {
+                const response = await fetch("https://app.text.lk/api/v3/sms/send", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer 480|odAdq3m8YXQE7aGUzZCwS6fBychoBQk14xoWWywp9063231f", // Replace with your actual API Key
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        recipient: recipient,
+                        sender_id: "Imagini", // Change this to your sender ID
+                        type: "plain",
+                        message: message
+                    })
+                });
+                const data = await response.json();
+                if (data.status === "success" || data.status === true) {
+                    return true;
+                } else {
+                    throw new Error(data.message || "Failed to send SMS");
+                }
+            } catch (error) {
+                console.error("SMS Error:", error);
+                return false;
+            }
+        }
+
         document.getElementById('clientForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const statusDiv = document.getElementById('status');
+            statusDiv.textContent = 'Creating authentication account...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Create user in Firebase Auth
+            const auth = getAuth();
+            let userCredential;
+            try {
+                userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            } catch (err) {
+                statusDiv.textContent = 'Error creating authentication account: ' + err.message;
+                return;
+            }
+
             statusDiv.textContent = 'Uploading avatar...';
             // Upload avatar to Cloudinary
             if (!avatarBlob) {
@@ -513,7 +562,21 @@
                     galleryUrls: galleryUrls
                 };
                 const docRef = await addDoc(collection(db, 'clients'), data);
-                statusDiv.innerHTML = 'Client account created successfully!<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+                const phone = document.getElementById('phone').value;
+                const smsMessage = `Welcome to ImaTAP,
+
+Email : ${email}
+Password : ${password}
+
+Hotline : 077 442 9053
+Whatsapp : +94 77 442 9053
+Website : www.imatap.com`;
+                const smsSent = await sendSMS(phone, smsMessage);
+                if (smsSent) {
+                    statusDiv.innerHTML = 'Client account created successfully! SMS sent.<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+                } else {
+                    statusDiv.innerHTML = 'Client account created, but failed to send SMS.<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+                }
                 document.getElementById('clientForm').reset();
                 document.getElementById('avatarPreview').innerHTML = '';
                 document.getElementById('coverPreview').innerHTML = '';
