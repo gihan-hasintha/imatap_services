@@ -39,3 +39,28 @@ window.addEventListener('resize', () => {
   const activeBtn = document.querySelector('.tab-button.active');
   if (activeBtn) moveUnderline(activeBtn);
 });
+
+const CACHE_NAME = 'imatap-cache-v1';
+const urlsToCache = [
+  '/',
+  '/account.html',
+  '/css/style.css',
+  '/assets/img/logo_f.webp',
+  // Add all other assets you want to cache (images, JS, etc.)
+];
+
+// Install event: cache files
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+// Fetch event: serve cached files if offline
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
+  );
+});

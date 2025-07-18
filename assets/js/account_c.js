@@ -223,13 +223,13 @@ async function sendSMS(recipient, message) {
         const response = await fetch("https://app.text.lk/api/v3/sms/send", {
             method: "POST",
             headers: {
-                "Authorization": "Bearer 480|odAdq3m8YXQE7aGUzZCwS6fBychoBQk14xoWWywp9063231f", // Replace with your actual API Key
+                "Authorization": "Bearer 1092|Fvydl0ZEpFY0mFlx1Ab81HQAP8BBvlfquSLO0F6R3b853a69", // Replace with your actual API Key
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
             body: JSON.stringify({
                 recipient: recipient,
-                sender_id: "Imagini", // Change this to your sender ID
+                sender_id: "ImaTAP", // Change this to your sender ID
                 type: "plain",
                 message: message
             })
