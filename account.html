@@ -327,7 +327,7 @@
             avatarImg.src = data.avatarUrl || '';
             coverPhotoImg.style.backgroundImage = data.coverPhotoUrl ? `url('${data.coverPhotoUrl}')` : '';
             profileName.textContent = data.fullName || '';
-            profileIntro.textContent = data.intro || `Hi! My name is ${data.fullName || ''}. It's nice to meet you.`;
+            profileIntro.textContent = data.shortBio || `Hi! My name is ${data.fullName || ''}. It's nice to meet you.`;
             const info = renderInfoCard(data);
             document.getElementById('contactInfo').innerHTML = info.contact;
             document.getElementById('workInfo').innerHTML = info.work;

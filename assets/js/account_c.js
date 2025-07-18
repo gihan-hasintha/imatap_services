@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app-check.js";
+
 // Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
@@ -364,6 +365,7 @@ document.getElementById('clientForm').addEventListener('submit', async function(
             address: document.getElementById('address').value,
             school: document.getElementById('school').value,
             website: document.getElementById('website').value,
+            shortBio: document.getElementById('shortBio').value, // <-- Add this line
             social: {
                 facebook: facebookArray,
                 instagram: instagramArray,
