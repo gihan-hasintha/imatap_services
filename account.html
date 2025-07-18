@@ -11,6 +11,20 @@
     href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
     rel="stylesheet"
 />
+<style>
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+}
+.image-modal.open {
+  display: flex;
+}
+</style>
 </head>
 <body>
     
@@ -78,7 +92,7 @@
               </div>
               
               <div id="home" class="tab-content active">
-                <h3>Home</h3>
+                <h3>About Me</h3>
                 
             <div id="profileIntro"></div>
 
@@ -131,6 +145,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app-check.js";
         const firebaseConfig = {
             apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
             authDomain: "imatap.firebaseapp.com",
@@ -141,6 +156,10 @@
             measurementId: "G-43CKB8XJBF"
         };
         const app = initializeApp(firebaseConfig);
+        const appCheck = initializeAppCheck(app, {
+          provider: new ReCaptchaV3Provider('6LdaQocrAAAAAEB7H0vhlojYmCpwpA_oN-lczPM2'),
+          isTokenAutoRefreshEnabled: true
+        });
         const db = getFirestore(app);
         function getIdFromUrl() {
             const params = new URLSearchParams(window.location.search);
@@ -318,7 +337,7 @@
                 gallerySection.innerHTML = `
                     <h3>Gallery Photos</h3>
                     <div class="gallery-photos">
-                        ${data.galleryUrls.map(url => `<img src="${url}" class="gallery-photo" style="max-width:150px;max-height:150px;margin:8px;border-radius:8px;box-shadow:0 2px 8px #0001;">`).join('')}
+                        ${data.galleryUrls.map(url => `<img src="${url}" class="gallery-photo" style="width:100%;height:150px;object-fit:cover;margin:8px;border-radius:8px;box-shadow:0 2px 8px #0001;">`).join('')}
                     </div>
                 `;
             } else {
@@ -397,7 +416,33 @@
                 }
             });
         });
+        // Modal logic for gallery images
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('gallery-photo')) {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImg');
+                modalImg.src = e.target.src;
+                modal.classList.add('open');
+                modal.style.display = 'flex';
+            }
+            if (e.target.id === 'closeModal' || e.target.id === 'imageModal') {
+                document.getElementById('imageModal').classList.remove('open');
+                document.getElementById('imageModal').style.display = 'none';
+            }
+        });
+        // Optional: close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('imageModal').classList.remove('open');
+                document.getElementById('imageModal').style.display = 'none';
+            }
+        });
     </script>
     <script src="./assets/js/script.js"></script>
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" style="display:none;">
+      <span class="close-modal" id="closeModal" style="position:absolute;top:20px;right:30px;font-size:40px;color:white;cursor:pointer;z-index:1001;">&times;</span>
+      <img class="modal-content" id="modalImg" style="display:block;margin:auto;max-width:90vw;max-height:90vh;box-shadow:0 4px 32px #000a;border-radius:12px;">
+    </div>
 </body>
 </html> 

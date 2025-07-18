@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app-check.js";
 // Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
@@ -12,6 +13,10 @@ const firebaseConfig = {
     measurementId: "G-43CKB8XJBF"
 };
 const app = initializeApp(firebaseConfig);
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6LdaQocrAAAAAEB7H0vhlojYmCpwpA_oN-lczPM2'),
+  isTokenAutoRefreshEnabled: true
+});
 const db = getFirestore(app);
 
 // Cloudinary config (replace with your own)

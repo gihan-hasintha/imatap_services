@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Create Admin Account</h2>
+<form id="adminForm">
+  <input type="text" id="adminName" placeholder="Name" required>
+  <input type="email" id="adminEmail" placeholder="Email" required>
+  <input type="password" id="adminPassword" placeholder="Password" required>
+  <label style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+    <input type="checkbox" id="adminAlerts"> Receive Alerts
+  </label>
+  <button type="submit">Create Admin</button>
+</form>
+
+<h2>Admin Accounts</h2>
+<table id="adminsTable">
+  <thead>
+    <tr>
+      <th>Name</th><th>Email</th><th>Status</th><th>Receive Alerts</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Admin rows go here -->
+  </tbody>
+</table>
+
+<style>
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 32px;
+}
+h2 {
+  color: #333;
+}
+form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #1565c0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+th {
+  background: #f0f4f8;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+</style>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app-check.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+const firebaseConfig = { 
+    apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
+            authDomain: "imatap.firebaseapp.com",
+            projectId: "imatap",
+            storageBucket: "imatap.firebasestorage.app",
+            messagingSenderId: "385083217755",
+            appId: "1:385083217755:web:83334c40989a9032c8ac7e",
+            measurementId: "G-43CKB8XJBF"
+ };
+const app = initializeApp(firebaseConfig);
+const appCheck = initializeAppCheck(app, {
+          provider: new ReCaptchaV3Provider('6LdaQocrAAAAAEB7H0vhlojYmCpwpA_oN-lczPM2'),
+          isTokenAutoRefreshEnabled: true
+        });
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Add admin
+document.getElementById('adminForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = adminName.value;
+  const email = adminEmail.value;
+  const password = adminPassword.value;
+  const receiveAlerts = document.getElementById('adminAlerts').checked;
+
+  try {
+    // Create user in Firebase Auth
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Save admin info in Firestore (do NOT save password)
+    await addDoc(collection(db, "admins"), { name, email, status: "active", receiveAlerts, uid: userCredential.user.uid });
+    adminForm.reset();
+    loadAdmins();
+  } catch (error) {
+    alert("Error creating admin: " + error.message);
+  }
+});
+
+// Load admins
+async function loadAdmins() {
+  const querySnapshot = await getDocs(collection(db, "admins"));
+  const tbody = document.getElementById('adminsTable').querySelector('tbody');
+  tbody.innerHTML = '';
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${data.name}</td>
+      <td>${data.email}</td>
+      <td>
+        <button onclick="toggleStatus('${docSnap.id}', '${data.status}')">
+          ${data.status === 'active' ? 'Deactivate' : 'Activate'}
+        </button>
+      </td>
+      <td style="text-align:center;">${data.receiveAlerts ? '✅' : '❌'}</td>
+      <td>
+        <button onclick="editAdmin('${docSnap.id}')">Edit</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+window.toggleStatus = async (id, currentStatus) => {
+  const newStatus = currentStatus === 'active' ? 'deactive' : 'active';
+  await updateDoc(doc(db, "admins", id), { status: newStatus });
+  loadAdmins();
+};
+window.editAdmin = (id) => {
+  // Show modal/form to edit admin details
+};
+loadAdmins();
+</script>
+</body>
+</html>

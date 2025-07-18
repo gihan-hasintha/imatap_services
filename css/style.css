@@ -71,13 +71,19 @@ body {
     margin-top: 8px;
 }
 
+.gallery-photos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px; /* Adjust the gap between cards as needed */
+}
+
 .profile-details-buttons-for-contact-bt-db a {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 12px;
+    height: 65px;
     border-radius: 7px;
     background-color: #12286b;
     color: white;
