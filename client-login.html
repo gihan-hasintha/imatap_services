@@ -11,9 +11,16 @@
     <input type="password" id="loginPassword" placeholder="Password" required>
     <button type="submit">Login</button>
   </form>
+  <div id="userDetails" style="display:none;">
+    <h2>User Details</h2>
+    <p id="userEmail"></p>
+    <p id="userName"></p>
+    <!-- Add more fields as needed -->
+  </div>
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
   
   const firebaseConfig = { 
       apiKey: "AIzaSyAjv12MJilOWARxoe_YqEXB9YZ2i1QMTd0",
@@ -26,16 +33,31 @@
    };
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
   
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = loginEmail.value;
     const password = loginPassword.value;
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Redirect or show admin management
-      alert("Login successful!");
-      // window.location.href = "/admin-dashboard.html";
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Fetch user details from Firestore
+      const userDocRef = doc(db, "users", user.uid); // assumes collection is 'users' and doc id is uid
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        // Show user details
+        document.getElementById('userDetails').style.display = 'block';
+        document.getElementById('userEmail').textContent = "Email: " + userData.email;
+        document.getElementById('userName').textContent = "Name: " + (userData.name || "N/A");
+        // Hide login form
+        document.getElementById('loginForm').style.display = 'none';
+      } else {
+        alert("No user details found in Firestore.");
+      }
     } catch (error) {
       alert("Login failed: " + error.message);
     }

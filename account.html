@@ -206,7 +206,8 @@
             document.getElementById("personalcontactnumberphonecall").href = `tel:${data.phone}`;
             document.getElementById("profile-working-top").innerHTML = `${data.jobRole || ''} at ${data.company || ''}`;
             document.getElementById("profilewhatsappnumber").href = `https://wa.me/${data.whatsapp}?text=Hi%20there!%20I'm%20reaching%20out%20from%20ImaTap%20Card`;
-            document.getElementById("profilefacebooklink").href = `${data.social.facebook}`;
+            const facebookLinks = Array.isArray(data.social?.facebook) ? data.social.facebook : [];
+            document.getElementById("profilefacebooklink").href = facebookLinks.length > 0 ? facebookLinks[0].url : "#";
 
             // List of supported social networks and their icons
             const socialNetworks = [
@@ -217,7 +218,7 @@
                 { key: 'youtube', icon: './assets/img/youtube.png', iconClass: 'infofidicltwyt', display: 'Youtube' },
                 { key: 'behance', icon: './assets/img/facebook-logo.png', iconClass: '', display: 'Behance' },
                 { key: 'github', icon: './assets/img/github.png', iconClass: 'infofidicltwytgithub', display: 'Github' },
-                { key: 'instagram', icon: './assets/img/instagram.png', iconClass: '', display: 'Instagram' }
+                { key: 'instagram', icon: './assets/img/instagram.png', iconClass: 'infofidicltwytinstagrammrr', display: 'Instagram' }
             ];
 
             let socialHtml = '';
@@ -408,6 +409,7 @@
                 const data = window.loadedProfileData;
                 if (!data) return;
                 let vcard = `BEGIN:VCARD\nVERSION:3.0\n`;
+                vcard += `N:${data.lastName || ''};${data.firstName || ''};;;\n`;
                 vcard += `FN:${data.fullName || ''}\n`;
                 vcard += `ORG:${data.company || ''}\n`;
                 vcard += `TITLE:${data.jobRole || ''}\n`;
@@ -415,10 +417,17 @@
                 vcard += `EMAIL:${data.email || ''}\n`;
                 vcard += `ADR;TYPE=HOME:;;${data.address || ''};;;;\n`;
                 if (data.website) vcard += `URL:${data.website}\n`;
-                if (data.social?.facebook) vcard += `X-SOCIALPROFILE;type=facebook:${data.social.facebook}\n`;
-                if (data.social?.linkedin) vcard += `X-SOCIALPROFILE;type=linkedin:${data.social.linkedin}\n`;
-                if (data.social?.twitter) vcard += `X-SOCIALPROFILE;type=twitter:${data.social.twitter}\n`;
-                if (data.social?.github) vcard += `X-SOCIALPROFILE;type=github:${data.social.github}\n`;
+                
+                const socialNetworks = ['facebook', 'linkedin', 'twitter', 'github', 'instagram', 'youtube', 'tiktok'];
+                socialNetworks.forEach(network => {
+                    const links = Array.isArray(data.social?.[network]) ? data.social[network] : [];
+                    links.forEach(link => {
+                        if (link && link.url) {
+                            vcard += `X-SOCIALPROFILE;type=${network}:${link.url}\n`;
+                        }
+                    });
+                });
+                
                 vcard += `END:VCARD`;
                 const blob = new Blob([vcard], { type: 'text/vcard' });
                 const url = URL.createObjectURL(blob);
@@ -447,9 +456,31 @@
                     text: shareText,
                     url: window.location.href,
                 };
-                if (navigator.share) {
+
+                // Try to share image if supported
+                if (navigator.canShare && data && data.avatarUrl) {
+                    fetch(data.avatarUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const file = new File([blob], "avatar.jpg", { type: blob.type });
+                            if (navigator.canShare({ files: [file] })) {
+                                // Share with image
+                                navigator.share({ ...shareData, files: [file] })
+                                    .catch(() => { alert('Sharing failed.'); });
+                            } else {
+                                // Fallback: share without image
+                                navigator.share(shareData)
+                                    .catch(() => { alert('Sharing failed.'); });
+                            }
+                        })
+                        .catch(() => {
+                            // Fallback: share without image
+                            navigator.share(shareData)
+                                .catch(() => { alert('Sharing failed.'); });
+                        });
+                } else if (navigator.share) {
                     navigator.share(shareData)
-                        .catch((err) => { alert('Sharing failed: ' + err); });
+                        .catch(() => { alert('Sharing failed.'); });
                 } else {
                     alert('Sharing is not supported on this browser.');
                 }

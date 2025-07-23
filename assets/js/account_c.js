@@ -391,9 +391,9 @@ Whatsapp : +94 77 442 9053
 Website : www.imatap.com`;
         const smsSent = await sendSMS(phone, smsMessage);
         if (smsSent) {
-            statusDiv.innerHTML = 'Client account created successfully! SMS sent.<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+            statusDiv.innerHTML = 'Client account created successfully! SMS sent.<br><a href="account?id=' + docRef.id + '">View Account</a>';
         } else {
-            statusDiv.innerHTML = 'Client account created, but failed to send SMS.<br><a href="account.html?id=' + docRef.id + '">View Account</a>';
+            statusDiv.innerHTML = 'Client account created, but failed to send SMS.<br><a href="account?id=' + docRef.id + '">View Account</a>';
         }
         document.getElementById('clientForm').reset();
         document.getElementById('avatarPreview').innerHTML = '';
